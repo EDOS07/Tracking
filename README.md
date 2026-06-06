@@ -29,6 +29,7 @@ src/
 ├── utils/                # Funciones auxiliares puras (Formateadores, validadores)
 ├── App.tsx               # Proveedores globales (QueryClient, Router)
 └── main.tsx              # Punto de entrada de la aplicación
+```
 
 ## 🛡️ Capa de Tipado (DTOs vs Models)
 
