@@ -14,22 +14,19 @@ export default function OrderDetailPanel({ detail }: Props) {
   const [imgError, setImgError] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const safePickup = detail.pickupTimeline || [];
+  const safeDropoff = detail.dropoffTimeline || [];
+
+  const currentTimeline = activeTab === 'pickup' ? safePickup : safeDropoff;
+
   const NeutralAvatarIcon = () => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      className="w-10 h-10 text-neutral-500"
-    >
-      <path
-        fillRule="evenodd"
-        d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0Zm-5-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 9c-1.825 0-3.422.977-4.295 2.437A5.49 5.49 0 0 0 8 13.5a5.49 5.49 0 0 0 4.294-2.063A4.997 4.997 0 0 0 8 9Z"
-        clipRule="evenodd"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-10 h-10 text-neutral-500">
+      <path fillRule="evenodd" d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0Zm-5-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 9c-1.825 0-3.422.977-4.295 2.437A5.49 5.49 0 0 0 8 13.5a5.49 5.49 0 0 0 4.294-2.063A4.997 4.997 0 0 0 8 9Z" clipRule="evenodd" />
     </svg>
   );
 
-  const isTrackEnabled = (detail as any).status >= 3 || detail.timeline.length >= 3;
+  const completedPickupSteps = safePickup.filter(step => step.isCompleted).length;
+  const isTrackEnabled = completedPickupSteps >= 3;
 
   const handleTrackOrder = () => {
     if (isTrackEnabled) {
@@ -42,31 +39,13 @@ export default function OrderDetailPanel({ detail }: Props) {
 
       {/* Cabecera */}
       <div className="p-6 flex items-center justify-between">
-        <button
-          onClick={() => navigate('/tracking')}
-          className="text-2xl text-neutral-400 hover:text-white transition-colors"
-        >
+        <button onClick={() => navigate('/tracking')} className="text-2xl text-neutral-400 hover:text-white transition-colors">
           &lt;
         </button>
         <h2 className="text-lg font-semibold tracking-tight">Cargo Details</h2>
-        <button
-          onClick={() => setOpen(true)}
-          className="relative p-2 hover:bg-gray-100 rounded-full transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-            style={{ color: "#FACC15" }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-            />
+        <button onClick={() => setOpen(true)} className="relative p-2 hover:bg-gray-100 rounded-full transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={{ color: "#FACC15" }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
           </svg>
         </button>
 
@@ -75,18 +54,11 @@ export default function OrderDetailPanel({ detail }: Props) {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-xl shadow-lg w-80 p-5">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Notificaciones</h2>
-
-                <button
-                  onClick={() => setOpen(false)}
-                  className="text-gray-500 hover:text-black"
-                >
-                  ✕
-                </button>
+                <h2 className="text-lg font-semibold text-black">Notificaciones</h2>
+                <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-black">✕</button>
               </div>
-
               <div className="text-center py-8 text-gray-500">
-                No tienes notificaciones.
+                <p>No hay nuevas notificaciones.</p>
               </div>
             </div>
           </div>
@@ -101,36 +73,24 @@ export default function OrderDetailPanel({ detail }: Props) {
       <div className="px-6 relative mb-10">
         <div className="absolute left-[39px] top-6 bottom-6 w-px bg-neutral-800"></div>
 
-        <div
-          onClick={() => setActiveTab('pickup')}
-          className={`relative pl-12 mb-8 cursor-pointer transition-opacity ${activeTab === 'pickup' ? 'opacity-100' : 'opacity-40'}`}
-        >
-          <div className="absolute left-0 top-0 w-4 h-4 rounded-full bg-yellow-400 border-4 border-black ring-1 ring-yellow-400 z-10"></div>
+        {/* Pickup Card */}
+        <div onClick={() => setActiveTab('pickup')} className={`cursor-pointer ${activeTab === 'pickup' ? 'border-amber-400' : 'border-transparent'}`}>
+          <div className={`absolute left-0 top-0 w-4 h-4 rounded-full border-4 z-10 ${activeTab === 'pickup' ? 'bg-yellow-400 border-black ring-1 ring-yellow-400' : 'bg-[#111] border-neutral-700'}`}></div>
           <p className="text-[10px] text-neutral-500 uppercase font-bold tracking-widest mb-0.5">Pickup</p>
-          <p className="text-sm font-bold text-white truncate">
-            {detail.pickupLocation.address.split(',')[0] || 'Recolección'}
-          </p>
-          <p className="text-xs text-neutral-500 truncate mt-0.5" title={detail.pickupLocation.address}>
-            {detail.pickupLocation.address}
-          </p>
+          <p className="text-sm font-bold text-white truncate">{detail.pickupLocation.address.split(',')[0] || 'Recolección'}</p>
+          <p className="text-xs text-neutral-500 truncate mt-0.5" title={detail.pickupLocation.address}>{detail.pickupLocation.address}</p>
           <div className="flex items-center gap-1.5 mt-2">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
             <span className="text-[10px] text-neutral-400 font-medium">Accepted</span>
           </div>
         </div>
 
-        <div
-          onClick={() => setActiveTab('dropoff')}
-          className={`relative pl-12 cursor-pointer transition-opacity ${activeTab === 'dropoff' ? 'opacity-100' : 'opacity-40'}`}
-        >
-          <div className="absolute left-0 top-0 w-4 h-4 rounded-full bg-[#111] border-2 border-neutral-700 z-10"></div>
+        {/* Dropoff Card */}
+        <div onClick={() => setActiveTab('dropoff')} className={`cursor-pointer mt-6 ${activeTab === 'dropoff' ? 'border-amber-400' : 'border-transparent'}`}>
+          <div className={`absolute left-0 top-[88px] w-4 h-4 rounded-full border-4 z-10 ${activeTab === 'dropoff' ? 'bg-yellow-400 border-black ring-1 ring-yellow-400' : 'bg-[#111] border-neutral-700'}`}></div>
           <p className="text-[10px] text-neutral-500 uppercase font-bold tracking-widest mb-0.5">Dropoff</p>
-          <p className="text-sm font-bold text-white truncate">
-            {detail.dropoffLocation.address.split(',')[0] || 'Entrega'}
-          </p>
-          <p className="text-xs text-neutral-500 truncate mt-0.5" title={detail.dropoffLocation.address}>
-            {detail.dropoffLocation.address}
-          </p>
+          <p className="text-sm font-bold text-white truncate">{detail.dropoffLocation.address.split(',')[0] || 'Entrega'}</p>
+          <p className="text-xs text-neutral-500 truncate mt-0.5" title={detail.dropoffLocation.address}>{detail.dropoffLocation.address}</p>
           <div className="flex items-center gap-1.5 mt-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-600"></span>
             <span className="text-[10px] text-neutral-400 font-medium">On hold</span>
@@ -139,33 +99,26 @@ export default function OrderDetailPanel({ detail }: Props) {
       </div>
 
       <div className="flex-1 bg-[#0f0f0f] border-t border-neutral-800 rounded-t-[40px] px-8 pt-10 pb-10 shadow-inner">
-
         {/* Avatar */}
         <div className="flex flex-col items-center mb-10 relative">
           <div className="w-20 h-20 rounded-full border-4 border-[#0f0f0f] bg-[#1a1a1a] flex items-center justify-center overflow-hidden shadow-xl">
             {detail.driverImageUrl && !imgError ? (
-              <img
-                src={detail.driverImageUrl}
-                alt="Driver"
-                className="w-full h-full object-cover"
-                onError={() => setImgError(true)}
-              />
+              <img src={detail.driverImageUrl} alt="Driver" className="w-full h-full object-cover" onError={() => setImgError(true)} />
             ) : (
               <NeutralAvatarIcon />
             )}
           </div>
           <p className="mt-3 text-sm font-bold tracking-wide">{detail.driverName}</p>
-          {/* Hora  */}
           <p className="text-xs text-neutral-500 mt-1">
             {detail.pickupLocation.startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
 
-        {/* Timeline */}
+        {/* Timeline Dinámica */}
         <div className="space-y-7 relative pl-6">
           <div className="absolute left-[31px] top-2 bottom-2 w-px border-l border-dashed border-neutral-700"></div>
 
-          {detail.timeline.map((step, idx) => (
+          {currentTimeline.map((step, idx) => (
             <div key={idx} className="flex items-center gap-4 relative">
               <div className={`w-5 h-5 rounded-full flex items-center justify-center z-10 shadow ${step.isCompleted ? 'bg-yellow-400' : 'bg-[#111] border border-neutral-700'}`}>
                 {step.isCompleted && (
@@ -197,21 +150,11 @@ export default function OrderDetailPanel({ detail }: Props) {
 
         {/* Panel Expandible */}
         <div className="mt-8">
-          <div
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-xl cursor-pointer hover:bg-[#222] transition-colors border border-neutral-800"
-          >
+          <div onClick={() => setIsExpanded(!isExpanded)} className="flex justify-between items-center bg-[#1a1a1a] p-4 rounded-xl cursor-pointer hover:bg-[#222] transition-colors border border-neutral-800">
             <span className="text-sm font-bold text-neutral-300">
               {activeTab === 'pickup' ? 'Pickup Data' : 'Dropoff Data'}
             </span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-              stroke="currentColor"
-              className={`w-4 h-4 text-yellow-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={`w-4 h-4 text-yellow-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
           </div>
@@ -219,16 +162,14 @@ export default function OrderDetailPanel({ detail }: Props) {
           <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
             <div className="p-4 space-y-4 text-xs text-neutral-400 leading-relaxed bg-[#111111] rounded-lg border border-neutral-800">
               <p className="font-medium text-neutral-300">
-                {activeTab === 'pickup'
-                  ? detail.pickupLocation.address
-                  : detail.dropoffLocation.address}
+                {activeTab === 'pickup' ? detail.pickupLocation.address : detail.dropoffLocation.address}
               </p>
 
               <div className="flex gap-3 text-neutral-500 items-center font-mono">
                 <span>
                   {activeTab === 'pickup'
-                    ? detail.pickupLocation.startDate.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
-                    : detail.dropoffLocation.startDate.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    ? detail.pickupLocation.startDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : detail.dropoffLocation.startDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </span>
                 <span className="text-[8px]">●</span>
                 <span>
@@ -240,7 +181,7 @@ export default function OrderDetailPanel({ detail }: Props) {
 
               <div className="pt-2 border-t border-neutral-800 space-y-1">
                 <p className="text-white font-medium flex items-center gap-2">
-                  <span className="text-neutral-500">📞</span> +52 {detail.managerPhone}
+                  <span className="text-neutral-500">📞</span> {detail.managerPhone}
                 </p>
                 <p className="text-white font-medium flex items-center gap-2">
                   <span className="text-neutral-500">✉️</span> {detail.managerEmail}

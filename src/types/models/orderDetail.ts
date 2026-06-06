@@ -25,5 +25,6 @@ export interface OrderDetail {
   weight: number;
   weightUnit: string;
   totalCost: number;
-  timeline: TimelineStep[];
+  pickupTimeline: TimelineStep[];
+  dropoffTimeline: TimelineStep[];
 }

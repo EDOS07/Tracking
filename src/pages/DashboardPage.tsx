@@ -84,7 +84,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="text-center py-8 text-gray-500">
-                    No tienes notificaciones.
+                    <p>No hay nuevas notificaciones.</p>
                   </div>
                 </div>
               </div>
@@ -109,9 +109,9 @@ export default function DashboardPage() {
         <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505]">
           <div className="max-w-3xl mx-auto p-6 space-y-4">
             {loadingList ? (
-              <p className="text-center text-gray-500 mt-10">Cargando órdenes...</p>
+              <p className="text-center text-gray-500 mt-10">Loading orders...</p>
             ) : filteredOrders.length === 0 ? (
-              <p className="text-center text-gray-500 mt-10">No hay órdenes para mostrar.</p>
+              <p className="text-center text-gray-500 mt-10">No orders to display.</p>
             ) : (
               filteredOrders.map((order) => (
                 <OrderCard
@@ -129,7 +129,7 @@ export default function DashboardPage() {
       {/* CARGO DETAILS */}
       <div className={`fixed inset-y-0 right-0 z-50 w-full md:w-[500px] bg-[#050505] border-l border-[#1f1f1f] shadow-2xl transform transition-transform duration-300 ease-in-out overflow-y-auto custom-scrollbar ${isDetailOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {loadingDetail ? (
-          <div className="flex items-center justify-center h-full text-gray-500">Cargando detalles...</div>
+          <div className="flex items-center justify-center h-full text-gray-500">Loading...</div>
         ) : activeOrderDetail ? (
           <OrderDetailPanel detail={activeOrderDetail} />
         ) : null}

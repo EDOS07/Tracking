@@ -16,7 +16,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           <span className="font-bold text-lg tracking-wider">BEGO LOGISTICS</span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-400">Control Panel</span>
+          <span className="text-sm text-slate-400">Dashboard</span>
           <div className="w-8 h-8 rounded-full bg-slate-700" /> {/* Avatar */}
         </div>
       </header>

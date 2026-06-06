@@ -6,6 +6,16 @@ import {
   type OrderDetailDto
 } from '../types/dto/order.dto';
 
+const statusTranslations: Record<string, string> = {
+  "Orden creada": "Created Order",
+  "Orden asignada": "Accepted Order",
+  "Recolección iniciada": "Pickup Started",
+  "Recolección completada": "Pickup Completed",
+  "Entrega iniciada": "Out for Delivery",
+  "Entrega completada": "Delivery Completed",
+  "Orden completada": "Order Completed"
+};
+
 export const orderMapper = {
 
   toSummaryList(data: OrderResponseDto<OrderSummaryDto[]>): OrderSummary[] {
@@ -38,20 +48,20 @@ export const orderMapper = {
       };
     });
   },
- 
+  
   toDetail(data: OrderResponseDto<OrderDetailDto>): OrderDetail {
     const dto = data?.result;
     if (!dto) throw new Error("No se encontraron datos de detalle");
 
-    const pickupSteps: TimelineStep[] = (dto.status_list?.pickup || []).map((s) => ({
-      title: s.status,
+    // Mapeo y traducción separados
+    const pickupTimeline: TimelineStep[] = (dto.status_list?.pickup || []).map((s) => ({
+      title: statusTranslations[s.status] || s.status,
       isCompleted: s.active
     }));
-    const dropoffSteps: TimelineStep[] = (dto.status_list?.dropoff || []).map((s) => ({
-      title: s.status,
+    const dropoffTimeline: TimelineStep[] = (dto.status_list?.dropoff || []).map((s) => ({
+      title: statusTranslations[s.status] || s.status,
       isCompleted: s.active
     }));
-
 
     const pickupData = dto.destinations?.[0];
     const dropoffData = dto.destinations?.[1];
@@ -69,7 +79,9 @@ export const orderMapper = {
       weight: dto.cargo?.weigth?.[0] || 0,
       weightUnit: dto.cargo?.weight_unit || 'kg',
       totalCost: dto.pricing?.total || 0,
-      timeline: [...pickupSteps, ...dropoffSteps],
+      
+      pickupTimeline,
+      dropoffTimeline,
 
       pickupLocation: {
         id: 'pickup',
