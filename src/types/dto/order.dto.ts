@@ -6,6 +6,7 @@ export interface OrderResponseDto<T> {
 // Lista
 export interface OrderSummaryDto {
   _id: string;
+  status: number;
   order_number: string;
   type: string;
   status_string: string;
@@ -49,7 +50,7 @@ export interface OrderDetailDto {
   };
   destinations?: {
     address: string;
-    startDate?: number; 
+    startDate?: number;
     endDate?: number;
   }[];
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { type OrderSummary } from '../../types/models/orderSummary';
 
+
 interface Props {
   order: OrderSummary;
   onClick: () => void;
@@ -56,10 +57,11 @@ export default function OrderCard({ order, onClick }: Props) {
     return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false });
   };
 
+
   const isAssigned = order.statusText.toLowerCase().includes('asignada');
 
   return (
-    <div 
+    <div
       onClick={onClick}
       className="w-full flex flex-col mb-6 cursor-pointer group"
     >
@@ -69,7 +71,7 @@ export default function OrderCard({ order, onClick }: Props) {
       </p>
 
       <div className="bg-[#111111] border border-neutral-800 rounded-[20px] p-5 flex flex-col relative group-hover:bg-[#151515] group-hover:border-neutral-700 transition-all duration-300">
-        
+
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
 
@@ -78,7 +80,7 @@ export default function OrderCard({ order, onClick }: Props) {
             </svg>
             <span className="text-white font-bold tracking-wide">{order.transportType}</span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 rounded-full ${isAssigned ? 'bg-neutral-500' : 'bg-blue-500'}`}></span>
             <span className="text-xs font-medium text-neutral-300 capitalize">{order.statusText}</span>
@@ -101,11 +103,11 @@ export default function OrderCard({ order, onClick }: Props) {
               </div>
               <div className="flex flex-col pt-1">
                 <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-0.5">Pickup</span>
-          
+
                 <span className="text-sm font-bold text-white leading-tight">
                   {order.pickupLocation.address.split(',')[0] || 'Recolección'}
                 </span>
-                
+
                 <span className="text-xs text-neutral-400 mt-1 max-w-[200px] truncate" title={order.pickupLocation.address}>
                   {order.pickupLocation.address}
                 </span>
@@ -146,13 +148,13 @@ export default function OrderCard({ order, onClick }: Props) {
         </div>
 
         <div className="flex items-center justify-between mt-auto pt-4 border-t border-neutral-800 group-hover:border-neutral-700 transition-colors">
-          
+
           {!isTimeUp ? (
             <p className="text-xs font-medium text-neutral-400">
               Start pickup in <span className="text-yellow-400 font-bold">{formatTimeLeft(timeLeft)}</span>
             </p>
           ) : (
-            <button 
+            <button
               onClick={handleNavegarClick}
               className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full text-xs transition-all active:scale-95 shadow"
             >
@@ -161,7 +163,11 @@ export default function OrderCard({ order, onClick }: Props) {
           )}
 
           {/* Botón de Resume */}
-          <button 
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); 
+              onClick();
+            }}
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-5 rounded-full flex items-center justify-center gap-2 transition-colors text-xs shadow"
           >
             Resume

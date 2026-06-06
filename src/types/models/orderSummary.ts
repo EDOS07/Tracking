@@ -7,6 +7,7 @@ export interface LocationPoint {
 
 export interface OrderSummary {
   id: string;
+  status: number;
   orderNumber: string;
   transportType: string;
   statusText: string;
