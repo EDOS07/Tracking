@@ -28,6 +28,7 @@ export const orderMapper = {
 
       return {
         id: dto._id,
+        status: dto.status,
         orderNumber: dto.order_number,
         transportType: dto.type || 'FTL',
         statusText: dto.status_string,

@@ -62,4 +62,12 @@ de los componentes de React, abstrayendo la complejidad de las marcas de tiempo 
 ## ⏰ Componentes Dinámicos y Temporizadores (`src/components/orders/`)
 
 - **Aislamiento de Lógica Temporal**: Se implementa `useNavigationTimer` desacoplado de la UI del botón, asegurando que el ciclo de vida del `setInterval` se limpie de forma estricta al desmontar el componente (`cleanup function`), previniendo fugas de memoria (*memory leaks*).
-- **Desacoplamiento de Eventos**: El botón de navegación ejecuta un control de propagación (`e.stopPropagation()`) para impedir que la interacción de disparo de consola interfiera con el evento de selección global del contenedor superior de la orden.
+- **Desacoplamiento de Eventos**: El botón de navegación ejecuta un control de propagación para impedir que la interacción de disparo de consola interfiera con el evento de selección global del contenedor superior de la orden.
+
+## 🚀 Despliegue
+
+El proyecto está optimizado para despliegue vía FTP/Apache. Asegúrate de incluir el archivo dist/ para soportar el enrutamiento del lado del cliente (React Router)
+
+## 👨‍💻 Desarrollador
+- **Eduardo Orozco Full-stack Developer**
+- **Desarrollado con pasión por las aplicaciones web de alto rendimiento.**

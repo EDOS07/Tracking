@@ -8,6 +8,7 @@ describe('Componente OrderCard', () => {
   // mock de nuestra orden
   const mockOrder: OrderSummary = {
     id: 'test-1',
+    status: 3,
     orderNumber: 'XJ9000',
     transportType: 'FTL',
     statusText: 'Orden Asignada',
