@@ -1,5 +1,3 @@
-// src/mappers/orderMapper.ts
-
 import { type OrderSummary } from '../types/models/orderSummary';
 import { type OrderDetail, type TimelineStep } from '../types/models/orderDetail';
 import {
@@ -10,7 +8,6 @@ import {
 
 export const orderMapper = {
 
-  // Mapea la lista
   toSummaryList(data: OrderResponseDto<OrderSummaryDto[]>): OrderSummary[] {
     const list = data?.result;
     if (!Array.isArray(list)) return [];
@@ -41,13 +38,11 @@ export const orderMapper = {
       };
     });
   },
-
-  // Mapea el detalle 
+ 
   toDetail(data: OrderResponseDto<OrderDetailDto>): OrderDetail {
     const dto = data?.result;
     if (!dto) throw new Error("No se encontraron datos de detalle");
 
-    // Timeline: Combinamos pickup y dropoff
     const pickupSteps: TimelineStep[] = (dto.status_list?.pickup || []).map((s) => ({
       title: s.status,
       isCompleted: s.active
@@ -57,7 +52,7 @@ export const orderMapper = {
       isCompleted: s.active
     }));
 
-    // Extraemos las direcciones del arreglo de destinos del detalle
+
     const pickupData = dto.destinations?.[0];
     const dropoffData = dto.destinations?.[1];
 

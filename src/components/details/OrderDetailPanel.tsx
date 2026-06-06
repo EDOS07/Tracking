@@ -9,12 +9,11 @@ interface Props {
 export default function OrderDetailPanel({ detail }: Props) {
   const navigate = useNavigate();
 
-  // Estados de la UI
   const [activeTab, setActiveTab] = useState<'pickup' | 'dropoff'>('pickup');
   const [isExpanded, setIsExpanded] = useState(true);
   const [imgError, setImgError] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  // Componente del Avatar Neutro (Se muestra si no hay imagen o si el enlace está roto)
   const NeutralAvatarIcon = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +29,6 @@ export default function OrderDetailPanel({ detail }: Props) {
     </svg>
   );
 
-  // Validamos si el botón Track Order debe estar habilitado (puedes ajustar esta lógica según necesites)
   const isTrackEnabled = (detail as any).status >= 3 || detail.timeline.length >= 3;
 
   const handleTrackOrder = () => {
@@ -51,12 +49,48 @@ export default function OrderDetailPanel({ detail }: Props) {
           &lt;
         </button>
         <h2 className="text-lg font-semibold tracking-tight">Cargo Details</h2>
-        <div className="relative text-yellow-400">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        <button
+          onClick={() => setOpen(true)}
+          className="relative p-2 hover:bg-gray-100 rounded-full transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+            style={{ color: "#FACC15" }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+            />
           </svg>
-          <span className="absolute top-0 right-0 w-2 h-2 bg-yellow-400 rounded-full border-2 border-black"></span>
-        </div>
+        </button>
+
+        {/* Modal en blanco */}
+        {open && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl shadow-lg w-80 p-5">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Notificaciones</h2>
+
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-gray-500 hover:text-black"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="text-center py-8 text-gray-500">
+                No tienes notificaciones.
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="px-6 mb-8">
@@ -64,11 +98,9 @@ export default function OrderDetailPanel({ detail }: Props) {
         <h1 className="text-2xl font-bold tracking-tight">Order #{detail.orderNumber}</h1>
       </div>
 
-      {/* SECCIÓN 1: Switch Pickup/Dropoff */}
       <div className="px-6 relative mb-10">
         <div className="absolute left-[39px] top-6 bottom-6 w-px bg-neutral-800"></div>
 
-        {/* Pickup Item */}
         <div
           onClick={() => setActiveTab('pickup')}
           className={`relative pl-12 mb-8 cursor-pointer transition-opacity ${activeTab === 'pickup' ? 'opacity-100' : 'opacity-40'}`}
@@ -87,7 +119,6 @@ export default function OrderDetailPanel({ detail }: Props) {
           </div>
         </div>
 
-        {/* Dropoff Item */}
         <div
           onClick={() => setActiveTab('dropoff')}
           className={`relative pl-12 cursor-pointer transition-opacity ${activeTab === 'dropoff' ? 'opacity-100' : 'opacity-40'}`}
@@ -107,7 +138,6 @@ export default function OrderDetailPanel({ detail }: Props) {
         </div>
       </div>
 
-      {/* SECCIÓN 2: Avatar Neutro y Timeline Check */}
       <div className="flex-1 bg-[#0f0f0f] border-t border-neutral-800 rounded-t-[40px] px-8 pt-10 pb-10 shadow-inner">
 
         {/* Avatar */}
@@ -125,7 +155,7 @@ export default function OrderDetailPanel({ detail }: Props) {
             )}
           </div>
           <p className="mt-3 text-sm font-bold tracking-wide">{detail.driverName}</p>
-          {/* Hora formateada del pickup como extra de diseño */}
+          {/* Hora  */}
           <p className="text-xs text-neutral-500 mt-1">
             {detail.pickupLocation.startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
@@ -157,15 +187,15 @@ export default function OrderDetailPanel({ detail }: Props) {
             onClick={handleTrackOrder}
             disabled={!isTrackEnabled}
             className={`w-full py-4 rounded-2xl font-bold text-sm transition-all shadow-lg ${isTrackEnabled
-                ? 'bg-yellow-400 text-black active:scale-95 hover:bg-yellow-500'
-                : 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
+              ? 'bg-yellow-400 text-black active:scale-95 hover:bg-yellow-500'
+              : 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
               }`}
           >
             Track Order
           </button>
         </div>
 
-        {/* Panel Expandible (Acordeón Dinámico) */}
+        {/* Panel Expandible */}
         <div className="mt-8">
           <div
             onClick={() => setIsExpanded(!isExpanded)}

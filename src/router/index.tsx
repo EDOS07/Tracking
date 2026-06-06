@@ -13,8 +13,7 @@ export const router = createBrowserRouter([
     element: <DashboardPage />,
     children: [
       {
-        path: ':orderId',
-        // Cuando hay un ID en la URL
+        path: ':orderId',        
         element: <DashboardPage />,
       },
     ],

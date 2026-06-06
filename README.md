@@ -34,7 +34,8 @@ src/
 
 Implementamos una separación estricta de tipos:
 1. **DTOs (`src/types/dto/`)**: Estructuras espejo de las respuestas crudas de la API REST.
-2. **Models (`src/types/models/`)**: Interfaces limpias en `camelCase` optimizadas para el consumo de los componentes de React, abstrayendo la complejidad de las marcas de tiempo e información anidada.
+2. **Models (`src/types/models/`)**: Interfaces limpias en `camelCase` optimizadas para el consumo 
+de los componentes de React, abstrayendo la complejidad de las marcas de tiempo e información anidada.
 
 ## 🔌 Capa de Servicios API (`src/api/`)
 

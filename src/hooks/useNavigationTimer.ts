@@ -32,11 +32,9 @@ export function useNavigationTimer({ startDate }: UseNavigationTimerProps) {
       return false;
     };
 
-    // Ejecución inicial inmediata
     const isFinished = calculateTime();
     if (isFinished) return;
 
-    // Intervalo para actualizar cada segundo en tiempo real
     const intervalId = setInterval(() => {
       const finished = calculateTime();
       if (finished) {

@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { cargoService } from '../api/cargoService';
 import { orderMapper } from '../mappers/orderMapper';
-import { type OrderSummary } from '../types/models/orderSummary';
 
 export function useFetchOrders() {
   return useQuery({
@@ -19,13 +18,3 @@ export function useFetchOrders() {
     }
   });
 }
-
-// export function useFetchOrders() {
-//   return useQuery<OrderSummary[]>({
-//     queryKey: ['orders', 'upcoming'],
-//     queryFn: async () => {
-//       const dtos = await cargoService.getUpcomingOrders();
-//       return orderMapper.toSummaryList(dtos);
-//     }
-//   });
-// }

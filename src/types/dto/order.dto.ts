@@ -1,11 +1,9 @@
-// src/types/dto/order.dto.ts
-
 export interface OrderResponseDto<T> {
   status: number;
   result: T;
 }
 
-// Interfaz para la respuesta de upcoming (Lista)
+// Lista
 export interface OrderSummaryDto {
   _id: string;
   order_number: string;
@@ -21,7 +19,7 @@ export interface OrderSummaryDto {
   }[];
 }
 
-// Interfaz para la respuesta de orders (Detalle)
+// Detalle
 export interface OrderDetailDto {
   _id: string;
   order_number: string;
@@ -51,7 +49,6 @@ export interface OrderDetailDto {
   };
   destinations?: {
     address: string;
-    // 🚀 Tipamos las fechas internas también
     startDate?: number; 
     endDate?: number;
   }[];

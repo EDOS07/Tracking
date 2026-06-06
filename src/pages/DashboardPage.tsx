@@ -39,10 +39,8 @@ export default function DashboardPage() {
 
 
   return (
-    // CONTENEDOR MAESTRO
     <div className="relative h-screen w-full bg-[#050505] text-white font-sans overflow-hidden">
-
-      {/* CARGO ORDERS */}
+      
       <section className="h-full w-full flex flex-col bg-[#0a0a0a]">
         {/* Cabecera, Tabs y Buscador */}
         <div className="p-6 pb-2 border-b border-[#1f1f1f] max-w-7xl mx-auto w-full">
@@ -128,8 +126,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* 🏛️ SECCIÓN 2: CARGO DETAILS (Panel superpuesto / Overlay) */}
-      {/* Usamos clases de Tailwind para fijarlo a la derecha y animar su entrada */}
+      {/* CARGO DETAILS */}
       <div className={`fixed inset-y-0 right-0 z-50 w-full md:w-[500px] bg-[#050505] border-l border-[#1f1f1f] shadow-2xl transform transition-transform duration-300 ease-in-out overflow-y-auto custom-scrollbar ${isDetailOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {loadingDetail ? (
           <div className="flex items-center justify-center h-full text-gray-500">Cargando detalles...</div>
@@ -138,7 +135,6 @@ export default function DashboardPage() {
         ) : null}
       </div>
 
-      {/* Fondo oscuro traslúcido (Backdrop) opcional al abrir el detalle */}
       {isDetailOpen && (
         <div
           onClick={() => navigate('/tracking')} // Cerrar al dar click fuera
